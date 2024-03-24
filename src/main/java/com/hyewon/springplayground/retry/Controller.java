@@ -15,9 +15,21 @@ public class Controller {
         return retryMethod();
     }
 
+    @Retryable(include = IllegalArgumentException.class)
+    @GetMapping("/retry2")
+    public String outer2() {
+        return retryMethod2();
+    }
+
     private String retryMethod() {
         System.out.println("retryMethod");
 
         throw new RuntimeException("retryMethod");
+    }
+
+    private String retryMethod2() {
+        System.out.println("retryMethod2");
+
+        throw new IllegalArgumentException("retryMethod2");
     }
 }
