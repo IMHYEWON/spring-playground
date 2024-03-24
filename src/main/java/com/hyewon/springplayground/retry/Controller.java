@@ -1,12 +1,13 @@
 package com.hyewon.springplayground.retry;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static java.lang.Thread.sleep;
+import java.time.LocalDateTime;
 
 @Slf4j
 @RestController
@@ -18,7 +19,9 @@ public class Controller {
         return retryMethod();
     }
 
-    @Retryable(retryFor = IllegalArgumentException.class, maxAttempts = 2)
+    @Retryable(retryFor = IllegalArgumentException.class
+            , maxAttempts = 5
+            , backoff = @Backoff(delay = 1500))
     @GetMapping("/retry2")
     public String outer2() {
         return retryMethod2();
@@ -31,6 +34,7 @@ public class Controller {
     }
 
     private String retryMethod2() {
+        System.out.println("호출시각 : " + LocalDateTime.now());
         System.out.println("retryMethod2");
 
         throw new IllegalArgumentException("retryMethod2");
