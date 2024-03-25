@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: spring-playground
+  data:
+    redis:
+      host: localhost
+      port: 6379
