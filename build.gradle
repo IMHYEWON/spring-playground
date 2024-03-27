@@ -32,6 +32,9 @@ dependencies {
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    //jpa
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
     // spring retry
     implementation 'org.springframework.retry:spring-retry'
