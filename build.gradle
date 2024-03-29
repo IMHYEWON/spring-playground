@@ -32,10 +32,14 @@ dependencies {
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    // redisson
+    implementation 'org.redisson:redisson-spring-boot-starter:3.27.2'
+
     //jpa
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
+    runtimeOnly 'com.mysql:mysql-connector-j'
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+
     // spring retry
     implementation 'org.springframework.retry:spring-retry'
     implementation 'org.springframework:spring-aspects'
