@@ -5,6 +5,10 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/test
@@ -21,7 +25,3 @@ spring:
             descriptor:
               sql:
                 BasicBinder: TRACE
-  data:
-    redis:
-      host: localhost
-      port: 6379
