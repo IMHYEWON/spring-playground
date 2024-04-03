@@ -29,26 +29,30 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    // redis
+    /* redis */
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
-    // redisson
     implementation 'org.redisson:redisson-spring-boot-starter:3.27.2'
 
-    //jpa
+    /* db */
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.mysql:mysql-connector-j'
-    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 
     // spring retry
     implementation 'org.springframework.retry:spring-retry'
     implementation 'org.springframework:spring-aspects'
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 
-    compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    /* lombok */
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // fixture monkey
+    /* Log */
+    implementation 'dev.akkinoc.spring.boot:logback-access-spring-boot-starter:3.3.3'
+    implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.12.0'
+
+    /* test */
     testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.14")
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

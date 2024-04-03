@@ -1,4 +1,10 @@
 spring:
+  profiles:
+    active: local
+    group:
+#      "local": "console-logging"
+      "local": "file-logging,console-logging,performance-logging"
+      "prod": "file-logging"
   application:
     name: spring-playground
   jpa:
@@ -25,3 +31,12 @@ spring:
             descriptor:
               sql:
                 BasicBinder: TRACE
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    root: info

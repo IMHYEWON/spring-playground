@@ -2,19 +2,17 @@ package com.hyewon.springplayground.redis.controller;
 
 import com.hyewon.springplayground.redis.repository.RedisRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @RequestMapping("/sequence")
 @RestController
+@Slf4j
 public class DummyController {
 
     private final RedisRepository repository;
@@ -28,5 +26,17 @@ public class DummyController {
     @GetMapping("/{sequenceName}/current")
     public Long getCurrentSequence(@PathVariable String sequenceName) {
         return repository.getCurrentSequence(sequenceName.toUpperCase());
+    }
+
+    @GetMapping("/log")
+    public String getLog() {
+
+        log.trace("TRACE!!");
+        log.debug("DEBUG!!");
+        log.info("INFO!!");
+        log.warn("WARN!!");
+        log.error("ERROR!!");
+
+        return "count: " + count++;
     }
 }
