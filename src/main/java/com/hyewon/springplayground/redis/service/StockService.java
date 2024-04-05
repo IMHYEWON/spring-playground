@@ -30,4 +30,8 @@ public class StockService {
      *                특정 목적에 의해 즉시 데이터베이스와 동기화할 필요가 있을 때 사용
      *
      * **/
+
+    public void createException() {
+        throw new RuntimeException("예외 발생");
+    }
 }

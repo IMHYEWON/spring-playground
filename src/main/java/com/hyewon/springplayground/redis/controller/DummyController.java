@@ -1,6 +1,7 @@
 package com.hyewon.springplayground.redis.controller;
 
 import com.hyewon.springplayground.redis.repository.RedisRepository;
+import com.hyewon.springplayground.redis.service.StockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DummyController {
 
     private final RedisRepository repository;
+    private final StockService service;
     private static int count = 0;
 
     @GetMapping("/{sequenceName}")
@@ -38,5 +40,10 @@ public class DummyController {
         log.error("ERROR!!");
 
         return "count: " + count++;
+    }
+
+    @GetMapping("/exception")
+    public void getException() {
+        service.createException();
     }
 }
