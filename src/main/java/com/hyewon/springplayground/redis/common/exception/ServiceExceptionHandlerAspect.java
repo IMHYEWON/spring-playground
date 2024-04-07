@@ -1,16 +1,22 @@
 package com.hyewon.springplayground.redis.common.exception;
 
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
+@RequiredArgsConstructor
 public class ServiceExceptionHandlerAspect {
+
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @AfterThrowing(pointcut = "execution(* com.hyewon.springplayground.redis.service..*.*(..))", throwing = "ex")
     public void handleServiceException(Exception ex) {
         // 서비스 레벨 예외 처리 로직
+        kafkaTemplate.send("dead-letter-topic", ex.getMessage());
         System.err.println("서비스 레벨에서 예외 발생: " + ex.getMessage());
     }
 

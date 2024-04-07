@@ -1,12 +1,10 @@
 version: '3'
-
 services:
   zookeeper:
     image: zookeeper
     container_name: zookeeper-server
     ports:
       - "2181:2181"
-
   kafka:
     image: wurstmeister/kafka
     platform: linux/amd64
