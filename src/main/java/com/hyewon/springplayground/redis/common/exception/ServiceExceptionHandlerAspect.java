@@ -1,5 +1,6 @@
 package com.hyewon.springplayground.redis.common.exception;
 
+import com.hyewon.springplayground.slack.SlackClient;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,11 +13,13 @@ import org.springframework.stereotype.Component;
 public class ServiceExceptionHandlerAspect {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
+    private final SlackClient slackClient;
 
     @AfterThrowing(pointcut = "execution(* com.hyewon.springplayground.redis.service..*.*(..))", throwing = "ex")
     public void handleServiceException(Exception ex) {
         // 서비스 레벨 예외 처리 로직
         kafkaTemplate.send("dead-letter-topic", ex.getMessage());
+        slackClient.sendSlack(ex.getMessage());
         System.err.println("서비스 레벨에서 예외 발생: " + ex.getMessage());
     }
 

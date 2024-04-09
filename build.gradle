@@ -40,6 +40,9 @@ dependencies {
     /* Kafka */
     implementation 'org.springframework.kafka:spring-kafka'
 
+    /* Slack */
+    implementation 'com.slack.api:slack-api-client:1.38.0'
+
     /* spring retry */
     implementation 'org.springframework.retry:spring-retry'
     implementation 'org.springframework:spring-aspects'
