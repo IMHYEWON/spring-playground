@@ -1,7 +1,9 @@
 package com.hyewon.springplayground.redis.common.exception;
 
+import com.hyewon.springplayground.redis.config.dto.DummyDto;
 import com.hyewon.springplayground.slack.SlackClient;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -16,10 +18,18 @@ public class ServiceExceptionHandlerAspect {
     private final SlackClient slackClient;
 
     @AfterThrowing(pointcut = "execution(* com.hyewon.springplayground.redis.service..*.*(..))", throwing = "ex")
-    public void handleServiceException(Exception ex) {
+    public void handleServiceException(JoinPoint joinPoint, Exception ex) {
         // 서비스 레벨 예외 처리 로직
-        kafkaTemplate.send("dead-letter-topic", ex.getMessage());
-        slackClient.sendSlack(ex.getMessage());
+        Object[] args = joinPoint.getArgs();
+        if (args != null && args.length > 0) {
+            // 첫 번째 파라미터가 DTO 객체인 경우에만 전송
+            Object firstArg = args[0];
+            if (firstArg instanceof DummyDto) {
+                DummyDto dto = (DummyDto) firstArg;
+                kafkaTemplate.send("dead-letter-topic", dto.toString() + " - " + ex.getMessage());
+                slackClient.sendSlack(dto.toString() + " - " + ex.getMessage());
+            }
+        }
         System.err.println("서비스 레벨에서 예외 발생: " + ex.getMessage());
     }
 

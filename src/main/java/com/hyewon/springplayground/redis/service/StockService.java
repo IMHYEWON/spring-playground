@@ -1,5 +1,6 @@
 package com.hyewon.springplayground.redis.service;
 
+import com.hyewon.springplayground.redis.config.dto.DummyDto;
 import com.hyewon.springplayground.redis.domain.Stock;
 import com.hyewon.springplayground.redis.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,10 @@ public class StockService {
      * **/
 
     public void createException() {
+        throw new RuntimeException("예외 발생");
+    }
+
+    public void createException(DummyDto dummyDto) {
         throw new RuntimeException("예외 발생");
     }
 }

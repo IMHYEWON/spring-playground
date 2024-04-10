@@ -1,13 +1,11 @@
 package com.hyewon.springplayground.redis.controller;
 
+import com.hyewon.springplayground.redis.config.dto.DummyDto;
 import com.hyewon.springplayground.redis.repository.RedisRepository;
 import com.hyewon.springplayground.redis.service.StockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RequiredArgsConstructor
@@ -45,5 +43,10 @@ public class DummyController {
     @GetMapping("/exception")
     public void getException() {
         service.createException();
+    }
+
+    @PostMapping("/exception")
+    public void createException(@RequestBody DummyDto dummyDto) {
+        service.createException(dummyDto);
     }
 }

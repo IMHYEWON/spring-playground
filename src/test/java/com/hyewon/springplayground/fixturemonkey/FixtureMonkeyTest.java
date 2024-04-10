@@ -52,8 +52,24 @@ public class FixtureMonkeyTest {
                         .set("graduated", false)
                         .sample();
 
-        System.out.println(student.toString());
+        assertThat(student.isLeave()).isFalse();
+        assertThat(student.isGraduated()).isFalse();
+        assertThat(student.isDoubleMajor()).isFalse();
     }
 
 
+
+    @Test
+    public void BeanValidation_픽스쳐몽키사용() {
+        FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
+                .objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
+                .build();
+
+        Student validatedStudent = fixtureMonkey.giveMeOne(Student.class);
+
+        System.out.println(validatedStudent.toString());
+        assertThat(validatedStudent.isLeave()).isFalse();
+        assertThat(validatedStudent.isGraduated()).isFalse();
+        assertThat(validatedStudent.isDoubleMajor()).isFalse();
+    }
 }
