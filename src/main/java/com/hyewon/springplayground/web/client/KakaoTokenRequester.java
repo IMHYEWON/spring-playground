@@ -26,6 +26,7 @@ public class KakaoTokenRequester {
         map.add("grant_type", request.getGrant_type());
         map.add("client_id", request.getClient_id());
         map.add("redirect_uri", request.getRedirect_uri());
+        System.out.println("redirect_uri at KaKaoTokenRquester : " + request.getRedirect_uri());
         map.add("code", request.getCode());
         map.add("client_secret", request.getClient_secret());
 
@@ -39,4 +40,5 @@ public class KakaoTokenRequester {
 
         return responseEntity.getBody();
     }
+
 }

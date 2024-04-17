@@ -36,6 +36,8 @@ public class KakaoTokenController {
                 .redirect_uri("http://localhost:8080/oauth/kakao/callback")
                 .build();
         System.out.println(kakaoTokenRequestDto.toString());
+        System.out.println("redirect_uri at controller : " + kakaoTokenRequestDto.getRedirect_uri());
+
         String response = kakaoTokenRequester.requestKakaoToken(contentType, kakaoTokenRequestDto).toString();
         return "kakao token : " + response;
     }
