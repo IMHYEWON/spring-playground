@@ -1,6 +1,6 @@
-package com.hyewon.springplayground.redis.common.exception;
+package com.hyewon.springplayground.exception;
 
-import com.hyewon.springplayground.redis.config.dto.DummyDto;
+import com.hyewon.springplayground.redis.dto.DummyDto;
 import com.hyewon.springplayground.slack.SlackClient;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;

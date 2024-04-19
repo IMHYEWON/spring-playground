@@ -1,9 +1,9 @@
 package com.hyewon.springplayground.redis.common.exception;
 
-import com.hyewon.springplayground.redis.config.dto.DummyDto;
+import com.hyewon.springplayground.redis.dto.DummyDto;
+import com.hyewon.springplayground.exception.ServiceExceptionHandlerAspect;
 import com.hyewon.springplayground.redis.service.StockService;
 import com.hyewon.springplayground.slack.SlackClient;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

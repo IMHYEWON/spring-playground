@@ -1,4 +1,4 @@
-package com.hyewon.springplayground.redis.config.property;
+package com.hyewon.springplayground.config.property;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
-package com.hyewon.springplayground.redis.config;
+package com.hyewon.springplayground.config;
 
-import com.hyewon.springplayground.redis.config.property.RedisProperties;
+import com.hyewon.springplayground.config.property.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 

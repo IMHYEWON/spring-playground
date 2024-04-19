@@ -1,6 +1,6 @@
 package com.hyewon.springplayground.redis.service;
 
-import com.hyewon.springplayground.redis.config.dto.DummyDto;
+import com.hyewon.springplayground.redis.dto.DummyDto;
 import com.hyewon.springplayground.redis.domain.Stock;
 import com.hyewon.springplayground.redis.repository.StockRepository;
 import lombok.RequiredArgsConstructor;

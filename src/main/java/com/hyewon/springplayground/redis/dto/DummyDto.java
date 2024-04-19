@@ -1,4 +1,4 @@
-package com.hyewon.springplayground.redis.config.dto;
+package com.hyewon.springplayground.redis.dto;
 
 import lombok.Data;
 
