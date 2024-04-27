@@ -1,6 +1,6 @@
-package com.hyewon.springplayground.web.client;
+package com.hyewon.springplayground.external.oauth.client;
 
-import com.hyewon.springplayground.web.dto.KakaoTokenDto;
+import com.hyewon.springplayground.external.oauth.dto.KakaoTokenDto;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

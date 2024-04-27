@@ -16,7 +16,6 @@ public class DummyController {
 
     private final RedisRepository repository;
     private final StockService service;
-    private static int count = 0;
 
     @GetMapping("/{sequenceName}")
     public Long getNextSequence(@PathVariable String sequenceName) {
@@ -26,18 +25,6 @@ public class DummyController {
     @GetMapping("/{sequenceName}/current")
     public Long getCurrentSequence(@PathVariable String sequenceName) {
         return repository.getCurrentSequence(sequenceName.toUpperCase());
-    }
-
-    @GetMapping("/log")
-    public String getLog() {
-
-        log.trace("TRACE!!");
-        log.debug("DEBUG!!");
-        log.info("INFO!!");
-        log.warn("WARN!!");
-        log.error("ERROR!!");
-
-        return "count: " + count++;
     }
 
     @GetMapping("/exception")

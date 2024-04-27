@@ -1,7 +1,7 @@
-package com.hyewon.springplayground.web.controller;
+package com.hyewon.springplayground.external.oauth.controller;
 
-import com.hyewon.springplayground.web.client.KakaoTokenRequester;
-import com.hyewon.springplayground.web.dto.KakaoTokenDto;
+import com.hyewon.springplayground.external.oauth.client.KakaoTokenRequester;
+import com.hyewon.springplayground.external.oauth.dto.KakaoTokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;

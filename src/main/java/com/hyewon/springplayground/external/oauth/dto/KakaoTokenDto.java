@@ -1,4 +1,4 @@
-package com.hyewon.springplayground.web.dto;
+package com.hyewon.springplayground.external.oauth.dto;
 
 import lombok.Builder;
 import lombok.Getter;
