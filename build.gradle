@@ -29,6 +29,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    /* oauth */
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    /* view */
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
     /* redis */
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.redisson:redisson-spring-boot-starter:3.27.2'
