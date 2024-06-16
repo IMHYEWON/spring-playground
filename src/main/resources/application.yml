@@ -25,6 +25,8 @@ spring:
   logging:
     level:
       org:
+        springframework:
+          kafka: DEBUG
         hibernate:
           SQL: DEBUG
           type:
