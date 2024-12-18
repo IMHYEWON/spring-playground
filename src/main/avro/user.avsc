@@ -1,6 +1,7 @@
 {
   "type": "record",
   "name": "User",
+  "namespace": "com.example.avro",
   "fields": [
     {
       "name": "userId",

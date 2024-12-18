@@ -22,6 +22,11 @@ spring:
     password: 1234
     hikari:
       maximum-pool-size: 40
+  kafka:
+    bootstrap-servers: localhost:9092,localhost:9101
+    schema-registry:
+      url: http://127.0.0.1:8081
+
   logging:
     level:
       org:

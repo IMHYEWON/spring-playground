@@ -86,6 +86,14 @@ dependencyManagement {
     }
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs += "$buildDir/generated-sources/avro"
+        }
+    }
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
