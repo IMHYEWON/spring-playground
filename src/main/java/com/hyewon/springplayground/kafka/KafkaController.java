@@ -11,15 +11,21 @@ public class KafkaController {
     @Autowired
     private KafkaListenerService kafkaListenerService;
 
-    @PostMapping("/stop")
+    @GetMapping("/stop")
     public void stopKafkaListener() {
         kafkaListenerService.stopListener();
         log.info("Kafka listener stopped at {}", System.currentTimeMillis());
     }
 
-    @PostMapping("/start")
+    @GetMapping("/start")
     public void startKafkaListener() {
         kafkaListenerService.startListener();
+        log.info("Kafka listener stopped at {}", System.currentTimeMillis());
+    }
+
+    @GetMapping("/start/{offsetResetPolicy}")
+    public void startKafkaListener(String offsetResetPolicy) {
+        kafkaListenerService.startListener(offsetResetPolicy);
         log.info("Kafka listener stopped at {}", System.currentTimeMillis());
     }
 }
