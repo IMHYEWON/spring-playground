@@ -1,0 +1,32 @@
+{
+  "type": "record",
+  "name": "User",
+  "fields": [
+    {
+      "name": "userId",
+      "type": "string",
+      "doc": "Unique identifier for the user"
+    },
+    {
+      "name": "userName",
+      "type": "string",
+      "doc": "Name of the user"
+    },
+    {
+      "name": "age",
+      "type": "int",
+      "doc": "Age of the user"
+    },
+    {
+      "name": "email",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "Email address of the user, optional"
+    },
+    {
+      "name": "isActive",
+      "type": "boolean",
+      "doc": "Indicates if the user is active"
+    }
+  ]
+}
