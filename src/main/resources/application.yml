@@ -47,3 +47,12 @@ logging:
   config: classpath:logback-spring.xml
   level:
     root: info
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+kakao:
+  client:
+    id: 20c5e61eca234407fe67e0918dbff845
+    secret: LNb25bRip0Xxa8utallgJUTz1ycaWs06
