@@ -78,6 +78,9 @@ dependencies {
     /* test */
     testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.14")
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    /* Monitoring & Observability */
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
 dependencyManagement {
