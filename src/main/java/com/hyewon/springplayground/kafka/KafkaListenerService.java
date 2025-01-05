@@ -20,7 +20,6 @@ public class KafkaListenerService {
     @Autowired
     private ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory;
 
-
     public void stopListener() {
         MessageListenerContainer listenerContainer = registry.getListenerContainer("myListener");
         if (listenerContainer != null) {
