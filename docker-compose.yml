@@ -92,12 +92,16 @@ services:
     ports:
       - "16686:16686" # for the Web UI
       - "4317:4317" # for gRPC protocol to send spans
+    networks:
+      - my_network
 
   zipkin:
     image: openzipkin/zipkin:latest
     restart: always
     ports:
       - "9411:9411"
+    networks:
+      - my_network
 
   prometheus:
     image: prom/prometheus:latest
@@ -107,12 +111,23 @@ services:
       - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+    restart: always
     networks:
       - my_network
 #    depends_on:
 #      my-app
 
-
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./docker/grafana-datasources.yml:/etc/grafana/provisioning/datasources/grafana-datasources.yml
+    restart: always
+    depends_on:
+      - prometheus
+    networks:
+      - my_network
 #volumes:
 #  mysql-data:
 #  mysql-log:

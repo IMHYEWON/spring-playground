@@ -252,3 +252,16 @@ ENTRYPOINT java -javaagent:/opentelemetry-javaagent.jar \
   - `otel_collector` job 추가 확인
 
 
+#### 5.2 Grafana 설치
+- docker compose 파일에 grafana 추가
+```dockerfile
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - my_network
+```
+
+- Grafana UI 확인
+  - http://localhost:3000
