@@ -100,3 +100,7 @@ sourceSets {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+bootJar {
+    archiveFileName = 'playground.jar'
+}

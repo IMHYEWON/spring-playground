@@ -2,6 +2,7 @@
 
 ## OpenTelemetry Instrumentation with Java Agent
 
+### 1. Opentelemetry Java Agent 다운받아서 실행하기
 - 오픈텔레메트리 자바 에이전트 다운로드
     ```bash
     curl -L -O https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar
@@ -55,3 +56,28 @@
     - `thread.name=http-nio-8080-exec-3` : 요청을 처리한 스레드의 이름. 
     - `server.address=127.0.0.1` : 요청이 전송된 서버의 주소. 
     - `network.protocol.version=1.1` : 사용된 네트워크 프로토콜의 버전 (HTTP/1.1).
+
+
+- (어플리케이션 도커 이미지로 실행하는 경우)
+  ```dockerfile
+  FROM ubuntu:20.04
+  LABEL authors="hazel"
+  
+  ADD build/libs/playground.jar /playground.jar
+  ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar /opentelemetry-javaagent.jar
+  
+  ENTRYPOINT java -javaagent:/opentelemetry-javaagent.jar \
+                  -Dotel.traces.exporter=logging \
+                  -Dotel.metrics.exporter=logging \
+                  -Dotel.logs.exporter=logging \
+                  -jar /playground.jar
+  
+  ```
+  ```dockerfile
+  version: '3'
+  services:
+    my-app:
+    build: ./ # Dockerfile 위치
+    ports:
+    - "8080:8080"
+  ```
