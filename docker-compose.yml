@@ -128,6 +128,27 @@ services:
       - prometheus
     networks:
       - my_network
-#volumes:
-#  mysql-data:
-#  mysql-log:
+
+  promtail:
+    image: grafana/promtail:latest
+    ports:
+      - "9080:9080"
+    volumes:
+      - ./logs:/app/logs  # 로그 디렉토리 마운트
+      - ./docker/promtail-config.yml:/etc/promtail/promtail-config.yml
+    command: -config.file=/etc/promtail/promtail-config.yml
+    restart: always
+    networks:
+      - my_network
+
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: always
+    networks:
+      - my_network
+

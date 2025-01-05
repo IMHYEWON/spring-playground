@@ -265,3 +265,64 @@ ENTRYPOINT java -javaagent:/opentelemetry-javaagent.jar \
 
 - Grafana UI 확인
   - http://localhost:3000
+
+### 6. 로그 수집하기 with Promtail, Loki
+#### 6.1 Promtail 설치
+- docker compose 파일에 promtail 추가
+```dockerfile
+  promtail:
+    image: grafana/promtail:latest
+    ports:
+      - "9080:9080"
+    volumes:
+      - ./logs:/app/logs  # 로그 디렉토리 마운트
+      - ./docker/promtail-config.yml:/etc/promtail/promtail-config.yml
+    command: -config.file=/etc/promtail/promtail-config.yml
+    restart: always
+    networks:
+      - my_network
+```
+
+- promtail-config.yml 설정
+```yaml
+server:
+  http_listen_address: 0.0.0.0
+  http_listen_port: 9080
+  enable_runtime_reload: true # HTTP 요청으로 리로드 활성화
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push # push할 Loki의 주소
+
+scrape_configs:
+  - job_name: my-app
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: my-app
+          __path__: /app/logs/*.log
+```
+
+#### 6.2 Loki 설치
+- docker compose 파일에 loki 추가
+```dockerfile
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: always
+    networks:
+      - my_network
+```
+
+- Grafana UI 확인
+  - http://localhost:3000
+  - `Explore`에서 Loki datasource 추가
+  - `Log`에서 로그 확인
+![img_3.png](img_3.png)

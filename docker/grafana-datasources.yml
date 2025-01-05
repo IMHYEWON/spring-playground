@@ -13,3 +13,54 @@ datasources:
     editable: false
     jsonData:
       httpMethod: GET
+
+  - name: Loki
+    type: loki
+    uid: loki
+    access: proxy
+    orgId: 1
+    url: http://loki:3100
+    basicAuth: false
+    isDefault: false
+    version: 1
+    editable: false
+    jsonData:
+      derivedFields:
+        - datasourceUid: prometheus
+          matcherRegex: "(trace_id=\\w+)"
+          name: "Trace ID"
+          url: "$${__value.raw}"  # Trace linking example
+
+  - name: Jaeger
+    type: jaeger
+    uid: jaeger
+    access: proxy
+    orgId: 1
+    url: http://jaeger:16686
+    basicAuth: false
+    isDefault: false
+    version: 1
+    editable: false
+    jsonData:
+      tracesToLogs: # Linking Jaeger Traces to Loki Logs
+        enabled: true
+        datasourceUid: loki
+        tags:
+          - "trace_id"
+
+  - name: Zipkin
+    type: zipkin
+    uid: zipkin
+    access: proxy
+    orgId: 1
+    url: http://zipkin:9411
+    basicAuth: false
+    isDefault: false
+    version: 1
+    editable: false
+    jsonData:
+      traceToLogs:
+        enabled: true
+        datasourceUid: loki
+        tags:
+          - "traceId"
