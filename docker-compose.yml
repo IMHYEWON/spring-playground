@@ -1,10 +1,17 @@
 version: '3'
+networks:
+  my_network:
+
 services:
 #  my-app:
 #    build: ./ # Dockerfile 위치
 #    environment:
 #      OTEL_TRACES_EXPORTER: "otlp, zipkin"
-#      OTEL_METRICS_EXPORTER: "logging"
+#      OTEL_METRICS_EXPORTER: "prometheus"
+#      OTEL_EXPORTER_OTLP_ENDPOINT: "localhost:4317"
+#      OTEL_EXPORTER_ZIPKIN_ENDPOINT: "localhost:9411/api/v2/spans"
+#      OTEL_EXPORTER_PROMETHEUS_HOST: "localhost"
+#      OTEL_EXPORTER_PROMETHEUS_PORT: "9464"
 #      OTEL_LOGGING_EXPORTER: "logging"
 #    depends_on:
 #      - broker
@@ -91,6 +98,20 @@ services:
     restart: always
     ports:
       - "9411:9411"
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - my_network
+#    depends_on:
+#      my-app
+
 
 #volumes:
 #  mysql-data:

@@ -207,3 +207,48 @@ ENTRYPOINT java -javaagent:/opentelemetry-javaagent.jar \
 #### 4.2 zipkin UI 확인
 - http://localhost:9411/zipkin
 ![img_2.png](img_2.png)
+
+
+### 5. Prometheus, Grafana로 메트릭 모니터링하기
+#### 5.1 Prometheus 설치
+- docker compose 파일에 prometheus 추가
+```dockerfile
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+    networks:
+      - my_network
+```
+- prometheus.yml 설정
+```yaml
+  - job_name: "otel_collector"
+    honor_timestamps: true
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ['host.docker.internal:9464']
+```
+- vm 옵션 수정
+```bash
+-javaagent:build/agent/opentelemetry-javaagent.jar
+-Dotel.traces.exporter=otlp,zipkin
+-Dotel.exporter.otlp.endpoint=http://localhost:4317
+-Dotel.exporter.zipkin.endpoint=http://localhost:9411/api/v2/spans
+-Dotel.metrics.exporter=prometheus
+-Dotel.exporter.prometheus.port=9464
+-Dotel.exporter.prometheus.host=0.0.0.0
+-Dotel.logs.exporter=none
+```
+
+- prometheus UI 확인
+  - http://localhost:9090
+  - `otel_collector` job 추가 확인
+
+
