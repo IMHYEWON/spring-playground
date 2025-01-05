@@ -142,3 +142,35 @@ ENTRYPOINT java -javaagent:/opentelemetry-javaagent.jar \
                 -Dotel.logs.exporter=logging \
                 -jar /playground.jar
 ```
+
+### 3. OpenTelemetry Agent로 수집한 데이터 Jaeger로 전송하기
+- Jaeger 설치
+```dockerfile
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - COLLECTOR_GRPC_ENABLED=true # gRPC 포트 활성화
+    restart: always
+    ports:
+      - "16686:16686" # for the Web UI
+      - "4317:4317" # for gRPC protocol to send spans
+```
+
+- vm 옵션 수정
+```bash
+-javaagent:build/agent/opentelemetry-javaagent.jar
+-Dotel.traces.exporter=otlp
+-Dotel.exporter.otlp.endpoint=http://localhost:4317
+-Dotel.metrics.exporter=logging
+-Dotel.logs.exporter=none
+```
+(또는 dockerfile로 어플리케이션 실행시)
+```dockerfile
+ENTRYPOINT java -javaagent:/opentelemetry-javaagent.jar \
+                -Dotel.traces.exporter=otlp \
+                -Dotel.exporter.otlp.endpoint=http://localhost:4317 \
+                -Dotel.metrics.exporter=logging \
+                -Dotel.logs.exporter=logging \
+                -jar /playground.jar
+```

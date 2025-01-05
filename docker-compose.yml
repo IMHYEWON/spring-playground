@@ -2,11 +2,16 @@ version: '3'
 services:
 #  my-app:
 #    build: ./ # Dockerfile 위치
+#    environment:
+#      OTEL_TRACES_EXPORTER: "jaeger"
+#      OTEL_METRICS_EXPORTER: "logging"
+#      OTEL_LOGGING_EXPORTER: "logging"
 #    depends_on:
 #      - broker
 #      - schema-registry
 #      - mysql
 #      - redis
+#      - jaeger
 #    ports:
 #      - "8080:8080"
 
@@ -21,6 +26,7 @@ services:
 #      - mysql-data:/var/lib/mysql
 #      - mysql-log:/var/log/mysql
       - ./my-db-init-scripts:/docker-entrypoint-initdb.d
+
   redis:
     image: redis:latest
     ports:
@@ -28,6 +34,7 @@ services:
     environment:
       - REDIS_HOST=localhost
       - REDIS_PORT=6379
+
   broker:
     image: confluentinc/cp-kafka:7.8.0
     hostname: broker
@@ -67,6 +74,16 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - COLLECTOR_GRPC_ENABLED=true # gRPC 포트 활성화
+    restart: always
+    ports:
+      - "16686:16686" # for the Web UI
+      - "4317:4317" # for gRPC protocol to send spans
 #volumes:
 #  mysql-data:
 #  mysql-log:
