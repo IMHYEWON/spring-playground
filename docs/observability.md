@@ -143,7 +143,7 @@ ENTRYPOINT java -javaagent:/opentelemetry-javaagent.jar \
                 -jar /playground.jar
 ```
 
-### 3. OpenTelemetry Agent로 수집한 데이터 Jaeger로 전송하기
+### 3. OpenTelemetry Agent로 수집한 데이터 Jaeger, Zipkin으로 전송하기
 #### 3.1 Jaeger 설치
 ```dockerfile
   jaeger:
@@ -184,3 +184,26 @@ ENTRYPOINT java -javaagent:/opentelemetry-javaagent.jar \
   3. Kafka Consumer로 메시지 수신
   4. Kafka Consumer에서 Stock 저장
 ![img_1.png](img_1.png)
+
+#### 4.1 Zipkin 설치
+```dockerfile
+  zipkin:
+    image: openzipkin/zipkin:latest
+    restart: always
+    ports:
+      - "9411:9411"
+```
+
+- vm 옵션 수정
+```bash
+-javaagent:build/agent/opentelemetry-javaagent.jar
+-Dotel.traces.exporter=otlp,zipkin
+-Dotel.exporter.otlp.endpoint=http://localhost:4317
+-Dotel.exporter.zipkin.endpoint=http://localhost:9411/api/v2/spans
+-Dotel.metrics.exporter=logging
+-Dotel.logs.exporter=none
+```
+
+#### 4.2 zipkin UI 확인
+- http://localhost:9411/zipkin
+![img_2.png](img_2.png)

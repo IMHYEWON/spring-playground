@@ -3,7 +3,7 @@ services:
 #  my-app:
 #    build: ./ # Dockerfile 위치
 #    environment:
-#      OTEL_TRACES_EXPORTER: "jaeger"
+#      OTEL_TRACES_EXPORTER: "otlp, zipkin"
 #      OTEL_METRICS_EXPORTER: "logging"
 #      OTEL_LOGGING_EXPORTER: "logging"
 #    depends_on:
@@ -12,6 +12,7 @@ services:
 #      - mysql
 #      - redis
 #      - jaeger
+#      - zipkin
 #    ports:
 #      - "8080:8080"
 
@@ -84,6 +85,13 @@ services:
     ports:
       - "16686:16686" # for the Web UI
       - "4317:4317" # for gRPC protocol to send spans
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    restart: always
+    ports:
+      - "9411:9411"
+
 #volumes:
 #  mysql-data:
 #  mysql-log:
