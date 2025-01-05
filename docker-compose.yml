@@ -1,14 +1,14 @@
 version: '3'
 services:
-  my-app:
-    build: ./ # Dockerfile 위치
-    depends_on:
-      - broker
-      - schema-registry
-      - mysql
-      - redis
-    ports:
-      - "8080:8080"
+#  my-app:
+#    build: ./ # Dockerfile 위치
+#    depends_on:
+#      - broker
+#      - schema-registry
+#      - mysql
+#      - redis
+#    ports:
+#      - "8080:8080"
 
   mysql:
     image: mysql:8.0

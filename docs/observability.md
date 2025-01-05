@@ -81,3 +81,64 @@
     ports:
     - "8080:8080"
   ```
+
+### 2. OpenTelemetry Java Agent 설정하기
+#### 2.1. 어플리케이션 fatJar 이름 설정
+```gradle
+bootJar {
+    archiveFileName = 'playground.jar'
+}
+```
+#### 2.2. OpenTelemetry Java Agent build.gradle에 추가하기
+manual하게 파일을 다운받는 것이 아닌, build.gradle에 의존성을 추가하여 자동으로 다운로드하도록 설정할 수 있음.
+- custom configuration 추가
+```gradle
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    agent
+}
+```
+
+- agent 의존성 추가, agent 파일을 복사하는 task 추가, bootJar task에 dependsOn 추가
+```gradle
+dependencies {
+    agent "io.opentelemetry.javaagent:opentelemetry-javaagent:1.32.0"
+...}
+
+
+// opentelemetry-javaagent-1.32.0-all.jar -> opentelemetry-javaagent.jar
+task copyAgent(type: Copy) {
+    from configurations.agent {
+        rename "opentelemetry-javaagent-.*\\.jar", "opentelemetry-javaagent.jar"
+    }
+    into layout.buildDirectory.dir("agent")
+}
+
+bootJar {
+    dependsOn(copyAgent)
+    archiveFileName = 'playground.jar'
+}
+```
+
+어플리케이션 실행시 vm옵션 수정
+```bash
+java -javaagent:build/agent/opentelemetry-javaagent.jar \
+      -Dotel.traces.exporter=logging \
+      -Dotel.metrics.exporter=logging \
+      -Dotel.logs.exporter=logging \
+      -jar build/libs/playground.jar
+```
+
+(dockerfile로 어플리케이션 실행시)
+```dockerfile
+ADD build/libs/playground.jar /playground.jar
+ADD build/agent/opentelemetry-javaagent.jar /opentelemetry-javaagent.jar
+
+ENTRYPOINT java -javaagent:/opentelemetry-javaagent.jar \
+                -Dotel.traces.exporter=logging \
+                -Dotel.metrics.exporter=logging \
+                -Dotel.logs.exporter=logging \
+                -jar /playground.jar
+```
