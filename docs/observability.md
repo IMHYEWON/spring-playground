@@ -326,3 +326,29 @@ scrape_configs:
   - `Explore`에서 Loki datasource 추가
   - `Log`에서 로그 확인
 ![img_3.png](img_3.png)
+
+
+### 7. Tempo로 분산 추적하기
+#### 7.1 Tempo 설치
+- docker compose 파일에 tempo 추가
+```dockerfile
+  tempo:
+    image: grafana/tempo:latest
+    ports:
+      - "16686:16686"
+    networks:
+      - my_network
+```
+
+- vm 옵션 수정
+```bash
+-javaagent:build/agent/opentelemetry-javaagent.jar
+-Dotel.traces.exporter=otlp,zipkin
+-Dotel.exporter.otlp.endpoint=http://localhost:4317
+-Dotel.exporter.zipkin.endpoint=http://localhost:9411/api/v2/spans
+-Dotel.metrics.exporter=prometheus
+-Dotel.exporter.prometheus.port=9464
+-Dotel.exporter.prometheus.host=0.0.0.0
+-Dotel.logs.exporter=none
+```
+![img_4.png](img_4.png)
