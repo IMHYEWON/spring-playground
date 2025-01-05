@@ -144,7 +144,7 @@ ENTRYPOINT java -javaagent:/opentelemetry-javaagent.jar \
 ```
 
 ### 3. OpenTelemetry Agent로 수집한 데이터 Jaeger로 전송하기
-- Jaeger 설치
+#### 3.1 Jaeger 설치
 ```dockerfile
   jaeger:
     image: jaegertracing/all-in-one:latest
@@ -174,3 +174,13 @@ ENTRYPOINT java -javaagent:/opentelemetry-javaagent.jar \
                 -Dotel.logs.exporter=logging \
                 -jar /playground.jar
 ```
+
+
+#### 3.2 jaeger UI 확인
+- http://localhost:16686
+- Trace 흐름
+  1. Rest Controller에서 HTTP 요청을 받음 
+  2. Kafka Producer로 메시지 전송
+  3. Kafka Consumer로 메시지 수신
+  4. Kafka Consumer에서 Stock 저장
+![img_1.png](img_1.png)
