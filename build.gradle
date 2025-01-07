@@ -29,7 +29,7 @@ ext {
 }
 
 dependencies {
-    agent "io.opentelemetry.javaagent:opentelemetry-javaagent:1.32.0"
+    runtimeOnly "io.opentelemetry.javaagent:opentelemetry-javaagent:1.32.0"
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
