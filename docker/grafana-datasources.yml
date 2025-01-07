@@ -10,9 +10,12 @@ datasources:
     basicAuth: false
     isDefault: false
     version: 1
-    editable: false
+    editable: true
     jsonData:
       httpMethod: GET
+      exemplarTraceIdDestinations:
+        - datasourceUid: tempo
+          name: trace_id
 
   - name: Loki
     type: loki
@@ -23,13 +26,43 @@ datasources:
     basicAuth: false
     isDefault: false
     version: 1
-    editable: false
+    editable: true
     jsonData:
       derivedFields:
-        - datasourceUid: prometheus
-          matcherRegex: "(trace_id=\\w+)"
-          name: "Trace ID"
-          url: "$${__value.raw}"  # Trace linking example
+          - datasourceUid: tempo
+            matcherRegex: \[.+,(.+?),
+            name: traceID
+            url: $${__value.raw}
+            label: Trace ID
+
+  - name: Tempo
+    type: tempo
+    access: proxy
+    orgId: 1
+    url: http://tempo:3200
+    basicAuth: false
+    isDefault: true
+    version: 1
+    editable: true
+    apiVersion: 1
+    uid: tempo
+    jsonData:
+      httpMethod: GET
+      serviceMap:
+        datasourceUid: prometheus
+      derivedFields:
+        traceID: traceID
+        spanID: spanID
+      tracesToLogs:
+        datasourceUid: loki
+        spanStartTimeShift: '-1h'
+        spanEndTimeShift: '1h'
+        filterByTraceID: true
+        filterBySpanID: false
+        tags: [ { key: 'service.name', value: 'job' } ]
+        lokiSearch: true
+      lokiSearch:
+        datasourceUid: loki
 
   - name: Jaeger
     type: jaeger
@@ -40,7 +73,7 @@ datasources:
     basicAuth: false
     isDefault: false
     version: 1
-    editable: false
+    editable: true
     jsonData:
       tracesToLogs: # Linking Jaeger Traces to Loki Logs
         enabled: true
@@ -57,7 +90,7 @@ datasources:
     basicAuth: false
     isDefault: false
     version: 1
-    editable: false
+    editable: true
     jsonData:
       traceToLogs:
         enabled: true
