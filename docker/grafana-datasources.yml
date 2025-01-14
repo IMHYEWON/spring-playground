@@ -30,7 +30,7 @@ datasources:
     jsonData:
       derivedFields:
           - datasourceUid: tempo
-            matcherRegex: \[.+,(.+?),
+            matcherRegex: trace_id=([a-f0-9\-]+)
             name: traceID
             url: $${__value.raw}
             label: Trace ID
@@ -46,23 +46,6 @@ datasources:
     editable: true
     apiVersion: 1
     uid: tempo
-    jsonData:
-      httpMethod: GET
-      serviceMap:
-        datasourceUid: prometheus
-      derivedFields:
-        traceID: traceID
-        spanID: spanID
-      tracesToLogs:
-        datasourceUid: loki
-        spanStartTimeShift: '-1h'
-        spanEndTimeShift: '1h'
-        filterByTraceID: true
-        filterBySpanID: false
-        tags: [ { key: 'service.name', value: 'job' } ]
-        lokiSearch: true
-      lokiSearch:
-        datasourceUid: loki
 
   - name: Jaeger
     type: jaeger

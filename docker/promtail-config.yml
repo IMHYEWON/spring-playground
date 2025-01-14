@@ -16,4 +16,5 @@ scrape_configs:
           - localhost
         labels:
           job: my-app
+          service_name: my-app
           __path__: /app/logs/*.log

@@ -352,3 +352,16 @@ scrape_configs:
 -Dotel.logs.exporter=none
 ```
 ![img_4.png](img_4.png)
+
+### 8. 분산 시스템에서 추적 확인
+- spring-playground 어플리케이션 실행
+- spring-playground2 어플리케이션 실행
+
+1. spring-playground 에서 Kafka Producer로 메시지 전송
+2. spring-playground, spring-playground2에서 각각 Kafka Consumer로 메시지 수신
+3. 각 컨슈머에서 Stock 저장 (MySQL)
+
+![img_5.png](img_5.png)
+
+- Kafka 토픽의 Header에서 Trace Parent ID 확인
+![img_6.png](img_6.png)
