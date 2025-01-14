@@ -16,6 +16,7 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    agent
 }
 
 repositories {
@@ -28,6 +29,8 @@ ext {
 }
 
 dependencies {
+    runtimeOnly "io.opentelemetry.javaagent:opentelemetry-javaagent:1.32.0"
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
@@ -99,4 +102,17 @@ sourceSets {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// opentelemetry-javaagent-1.32.0-all.jar -> opentelemetry-javaagent.jar
+task copyAgent(type: Copy) {
+    from configurations.agent {
+        rename "opentelemetry-javaagent-.*\\.jar", "opentelemetry-javaagent.jar"
+    }
+    into layout.buildDirectory.dir("agent")
+}
+
+bootJar {
+    dependsOn(copyAgent)
+    archiveFileName = 'playground.jar'
 }

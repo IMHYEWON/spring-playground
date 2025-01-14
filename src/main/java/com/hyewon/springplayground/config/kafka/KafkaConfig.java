@@ -1,4 +1,4 @@
-package com.hyewon.springplayground.config;
+package com.hyewon.springplayground.config.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;

@@ -1,0 +1,20 @@
+server:
+  http_listen_address: 0.0.0.0
+  http_listen_port: 9080
+  enable_runtime_reload: true # HTTP 요청으로 리로드 활성화
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push # push할 Loki의 주소
+
+scrape_configs:
+  - job_name: my-app
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: my-app
+          service_name: my-app
+          __path__: /app/logs/*.log

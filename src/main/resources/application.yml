@@ -10,6 +10,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+      format_sql: true
     show-sql: true
   data:
     redis:
@@ -54,5 +55,10 @@ server:
 
 kakao:
   client:
-    id: 20c5e61eca234407fe67e0918dbff845
-    secret: LNb25bRip0Xxa8utallgJUTz1ycaWs06
+    id: 1
+    secret: 1
+
+#otel:
+#  exporter:
+#    otlp:
+#      endpoint: http://localhost:4318
