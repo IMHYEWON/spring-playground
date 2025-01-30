@@ -25,12 +25,12 @@ scrape_configs:
     # scheme defaults to 'http'.
     static_configs:
       - targets: ["localhost:9090"]
-
-  - job_name: "spring-actuator"
-    metrics_path: '/actuator/prometheus'
-    scrape_interval: 1s
-    static_configs:
-      - targets: ['host.docker.internal:8080']
+#
+#  - job_name: "spring-actuator"
+#    metrics_path: '/actuator/prometheus'
+#    scrape_interval: 1s
+#    static_configs:
+#      - targets: ['host.docker.internal:8080']
 
   - job_name: "otel_collector"
     honor_timestamps: true
@@ -39,6 +39,4 @@ scrape_configs:
     metrics_path: /metrics
     scheme: http
     static_configs:
-      - targets: ['host.docker.internal:9464']
-#      - targets:
-#          - my-app:9464
+      - targets: ['collector:9464']  # 🚀 Collector에서 메트릭을 가져오도록 수정

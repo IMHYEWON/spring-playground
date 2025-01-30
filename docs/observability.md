@@ -365,3 +365,95 @@ scrape_configs:
 
 - Kafka 토픽의 Header에서 Trace Parent ID 확인
 ![img_6.png](img_6.png)
+
+
+### 9. Otel Collector로 메트릭, 트레이스 수집하기
+#### 9.1 Otel Collector 설치
+- docker compose 파일에 otel-collector 추가
+```dockerfile
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    volumes:
+      - ./docker/otel-collector-config.yml:/etc/otel-collector-config.yml
+    command: --config=/etc/otel-collector-config.yml
+    ports:
+      - 4318:4317  # OTLP gRPC receiver (Application -> Collector (Push))
+      - 9464:9464  # 🚀 Prometheus Exporter 포트 추가 (Prometheus -> Collector (Pull))
+      - 13133:13133 # health_check extension
+    networks:
+      - my_network
+```
+
+#### 9.2 메트릭 수집하기
+- ASIS : (Java Agent) --> Prometheus
+- TOBE : (Java Agent) --OTLP--> (OTel Collector) --Prometheus Exporter--> (Prometheus)
+
+- otel-collector-config.yml 설정
+```yaml
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:9464"  # 🚀 Prometheus가 OTel Collector에서 가져갈 엔드포인트
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [prometheus]
+```
+
+- vm 옵션 수정
+- ASIS VM 옵션
+  ```bash
+  -javaagent:opentelemetry-javaagent.jar
+  -Dotel.traces.exporter=otlp,jaeger
+  -Dotel.exporter.otlp.endpoint=http://localhost:4318
+  -Dotel.exporter.otlp.protocol=grpc
+  -Dotel.exporter.jeager.endpoint=http://localhost:14250
+  -Dotel.metrics.exporter=prometheus
+  -Dotel.exporter.prometheus.port=9464
+  -Dotel.exporter.prometheus.host=0.0.0.0
+  -Dotel.logs.exporter=logging
+  ```
+- TOBE VM 옵션
+  ```bash
+  -javaagent:opentelemetry-javaagent.jar
+  -Dotel.traces.exporter=otlp,jaeger
+  -Dotel.exporter.otlp.endpoint=http://localhost:4318
+  -Dotel.exporter.otlp.protocol=grpc
+  -Dotel.exporter.jeager.endpoint=http://localhost:14250
+  -Dotel.metrics.exporter=otlp
+  -Dotel.logs.exporter=logging
+  ```
+
+- prometheus config 수정
+```yaml
+- job_name: "otel_collector"
+  honor_timestamps: true
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  metrics_path: /metrics
+  scheme: http
+  static_configs:
+    - targets: ['collector:9464']  # 🚀 Collector에서 메트릭을 가져오도록 수정
+```
+
+#### 9.3 트레이스 수집하기
+- ASIS : (Java Agent) --> tempo
+- TOBE : (Java Agent) --OTLP--> (OTel Collector) --> tempo
+
+- otel-collector-config.yml 설정
+```yaml
+exporters:
+  otlp/tempo:
+    endpoint: "http://tempo:4317"
+    tls:
+      insecure: true
+
+  service:
+    pipelines:
+      traces:
+        receivers: [otlp]
+        processors: [filter/spans,batch]
+        exporters: [otlp/tempo]
+```

@@ -21,10 +21,9 @@ exporters:
 #  prometheusremotewrite:
 #    endpoint: "http://prometheus:9090/api/v1/write"
 #
-#  prometheus:
-#    endpoint: "0.0.0.0:8889"
-#    enable_open_metrics: true
-#
+  prometheus:
+    endpoint: "0.0.0.0:9464"  # 🚀 Prometheus가 OTel Collector에서 가져갈 엔드포인트
+
 #  otlp/jaeger:
 #    endpoint: "http://jaeger:14250"
 #    tls:
@@ -44,14 +43,13 @@ exporters:
 
 service:
   pipelines:
-#    metrics:
-#      receivers: [otlp]
-#      processors: [batch]
-#      exporters: [prometheusremotewrite]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [prometheus]
     traces:
       receivers: [otlp]
       processors: [filter/spans,batch]
-#      exporters: [otlp/jaeger,otlp/tempo]
       exporters: [otlp/tempo]
 #    logs:
 #      receivers: [otlp]
