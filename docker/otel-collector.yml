@@ -10,6 +10,13 @@ processors:
     send_batch_size: 100
     timeout: 10s
 
+  filter/spans:
+    spans:
+      exclude:
+        match_type: strict
+        span_names:
+          - "PING"
+
 exporters:
 #  prometheusremotewrite:
 #    endpoint: "http://prometheus:9090/api/v1/write"
@@ -43,7 +50,7 @@ service:
 #      exporters: [prometheusremotewrite]
     traces:
       receivers: [otlp]
-      processors: [batch]
+      processors: [filter/spans,batch]
 #      exporters: [otlp/jaeger,otlp/tempo]
       exporters: [otlp/tempo]
 #    logs:
