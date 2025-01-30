@@ -457,3 +457,4 @@ exporters:
         processors: [filter/spans,batch]
         exporters: [otlp/tempo]
 ```
+![img_7.png](img_7.png)
