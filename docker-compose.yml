@@ -84,27 +84,27 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
-#
-#  jaeger:
-#    image: jaegertracing/all-in-one:latest
-#    environment:
-#      - COLLECTOR_OTLP_ENABLED=true
-#      - COLLECTOR_GRPC_ENABLED=true # gRPC 포트 활성화
-#    restart: always
-#    ports:
-#      - "16686:16686" # for the Web UI
-#      - "4317:4317" # for gRPC protocol to send spans
-#    networks:
-#      - my_network
 
-  zipkin:
-    container_name: zipkin
-    image: openzipkin/zipkin:latest
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+#      - COLLECTOR_GRPC_ENABLED=true # gRPC 포트 활성화
     restart: always
     ports:
-      - "9411:9411"
+      - "16686:16686" # for the Web UI
+      - "14250:14250" # for gRPC protocol to send spans
     networks:
       - my_network
+
+#  zipkin:
+#    container_name: zipkin
+#    image: openzipkin/zipkin:latest
+#    restart: always
+#    ports:
+#      - "9411"
+#    networks:
+#      - my_network
 
   prometheus:
     container_name: prometheus
@@ -127,7 +127,7 @@ services:
     container_name: grafana
     image: grafana/grafana:latest
     ports:
-      - "3000:3000"
+      - 3000:3000
     volumes:
       - ./docker/grafana-datasources.yml:/etc/grafana/provisioning/datasources/grafana-datasources.yml
     restart: always
@@ -155,7 +155,7 @@ services:
     container_name: loki
     image: grafana/loki:latest
     ports:
-      - "3100:3100"
+      - 3100:3100
     volumes:
       - ./loki-data:/loki
     command: -config.file=/etc/loki/local-config.yaml
@@ -167,8 +167,7 @@ services:
     container_name: tempo
     image: grafana/tempo:latest
     ports:
-      - "3200:3200"        # HTTP API 포트
-      - "4317:4317"        # OTLP gRPC 포트
+      - 3200:3200        # HTTP API 포트
     volumes:
       - ./tempo-data:/var/tempo
       - ./docker/tempo-config.yml:/etc/tempo/tempo.yml
@@ -176,3 +175,21 @@ services:
     restart: always
     networks:
       - my_network
+
+  collector:
+    container_name: collector
+    image: otel/opentelemetry-collector-contrib:0.91.0
+    command:
+      - --config=/etc/otelcol-contrib/otel-collector.yml
+    volumes:
+      - ./docker/otel-collector.yml:/etc/otelcol-contrib/otel-collector.yml
+    restart: always
+    ports:
+      - 4318:4317 # OTLP gRPC receiver
+      - "8889" # Prometheus exporter metrics
+      - 13133:13133 # health_check extension
+    depends_on:
+      - loki
+      - tempo
+    networks:
+        - my_network

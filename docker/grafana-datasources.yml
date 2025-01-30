@@ -24,7 +24,7 @@ datasources:
     orgId: 1
     url: http://loki:3100
     basicAuth: false
-    isDefault: false
+    isDefault: true
     version: 1
     editable: true
     jsonData:
@@ -41,11 +41,22 @@ datasources:
     orgId: 1
     url: http://tempo:3200
     basicAuth: false
-    isDefault: true
+    isDefault: false
     version: 1
     editable: true
     apiVersion: 1
     uid: tempo
+    jsonData:
+      httpMethod: GET
+      serviceMap:
+        datasourceUid: prometheus
+      tracesToLogs:
+        datasourceUid: loki
+        spanStartTimeShift: '-1h'
+        spanEndTimeShift: '1h'
+        filterByTraceID: true
+        filterBySpanID: true
+        tags: [ { key: 'service.name', value: 'job' } ]
 
   - name: Jaeger
     type: jaeger
