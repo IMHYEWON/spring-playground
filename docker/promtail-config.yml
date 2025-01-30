@@ -18,3 +18,14 @@ scrape_configs:
           job: my-app
           service_name: my-app
           __path__: /app/logs/*.log
+
+  # scrape from Kafka connect Docker container
+  - job_name: docker_container
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        filters:
+          - name: label
+            values: [ "logging.promtail=true" ]  # 특정 라벨이 있는 컨테이너만 수집
+    relabel_configs:
+      - source_labels: [ __meta_docker_container_name ]
+        target_label: connect

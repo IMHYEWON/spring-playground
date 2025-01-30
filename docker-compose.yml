@@ -144,7 +144,9 @@ services:
     volumes:
       - ./logs:/app/logs  # 로그 디렉토리 마운트
       - ./docker/promtail-config.yml:/etc/promtail/promtail-config.yml
+      - /var/run/docker.sock:/var/run/docker.sock
     command: -config.file=/etc/promtail/promtail-config.yml
+    user: root  # 컨테이너 내에서 root로 실행
     restart: always
     networks:
       - my_network
