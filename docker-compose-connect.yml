@@ -21,7 +21,8 @@ services:
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: localhost:8081
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
     labels:
-      logging.promtail: "true"  # Promtail이 감지할 수 있도록 라벨 추가
+      logging.promtail.job: "connect"  # Promtail이 감지할 수 있도록 라벨 추가
+
 #  ksqldb-server:
 #    image: confluentinc/cp-ksqldb-server:7.8.0
 #    hostname: ksqldb-server
