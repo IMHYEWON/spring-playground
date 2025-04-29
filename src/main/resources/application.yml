@@ -62,3 +62,12 @@ kakao:
 #  exporter:
 #    otlp:
 #      endpoint: http://localhost:4318
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
