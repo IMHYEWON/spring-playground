@@ -50,13 +50,15 @@ datasources:
       httpMethod: GET
       serviceMap:
         datasourceUid: prometheus
-      tracesToLogs:
-        datasourceUid: loki
-        spanStartTimeShift: '-1h'
-        spanEndTimeShift: '1h'
-        filterByTraceID: true
-        filterBySpanID: true
-        tags: [ { key: 'service.name', value: 'job' } ]
+      nodeGraph:
+        enabled: true
+#      tracesToLogs:
+#        datasourceUid: loki
+#        spanStartTimeShift: '-1h'
+#        spanEndTimeShift: '1h'
+#        filterByTraceID: true
+#        filterBySpanID: true
+#        tags: [ { key: 'service.name', value: 'job' } ]
 
   - name: Jaeger
     type: jaeger

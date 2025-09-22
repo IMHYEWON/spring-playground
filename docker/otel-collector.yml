@@ -67,3 +67,10 @@ service:
       receivers: [kafka]
       processors: [batch]
       exporters: [loki]
+#
+#
+#  -Dotel.metrics.exemplar.enabled=true
+#  -Dotel.metrics.exemplar.filter=all
+#  -Dotel.instrumentation.micrometer.enabled=true
+#  -Dotel.instrumentation.runtime-metrics.enabled=true
+#  -Dotel.experimental.metrics.runtime-metrics.enable-exemplars=true

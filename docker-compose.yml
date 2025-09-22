@@ -71,10 +71,12 @@ services:
       # Replace CLUSTER_ID with a unique base64 UUID using "bin/kafka-storage.sh random-uuid"
       # See https://docs.confluent.io/kafka/operations-tools/kafka-tools.html#kafka-storage-sh
       CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+    networks:
+      - my_network
 
   schema-registry:
     container_name: schema-registry
-    image: confluentinc/cp-schema-registry:7.8.0
+    image: confluentinc/cp-schema-registry:7.8.0ㅓ
     hostname: schema-registry
     depends_on:
       - broker
@@ -84,6 +86,8 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+    networks:
+      - my_network
 
   jaeger:
     image: jaegertracing/all-in-one:latest
@@ -115,7 +119,7 @@ services:
       - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
       - --config.file=/etc/prometheus/prometheus.yml
-      - --enable-feature=exemplar-storage
+      - --enable-feature=exemplar-storage # 🚀 Exemplar 활성화
       - --web.enable-remote-write-receiver
     restart: always
     networks:
