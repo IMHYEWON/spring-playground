@@ -1,0 +1,89 @@
+networks:
+  observability_network:
+
+services:
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --enable-feature=exemplar-storage # 🚀 Exemplar 활성화
+      - --web.enable-remote-write-receiver
+    restart: always
+    networks:
+      - observability_network
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000
+    volumes:
+      - ./docker/grafana-datasources.yml:/etc/grafana/provisioning/datasources/grafana-datasources.yml
+    restart: always
+    depends_on:
+      - prometheus
+    networks:
+      - observability_network
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:latest
+    ports:
+      - "9080:9080"
+    volumes:
+      - ./logs:/app/logs  # 로그 디렉토리 마운트
+      - ./docker/promtail-config.yml:/etc/promtail/promtail-config.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: -config.file=/etc/promtail/promtail-config.yml
+    user: root  # 컨테이너 내에서 root로 실행
+    restart: always
+    networks:
+      - observability_network
+
+  loki:
+    container_name: loki
+    image: grafana/loki:latest
+    ports:
+      - 3100:3100
+    volumes:
+      - ./loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: always
+    networks:
+      - observability_network
+
+  tempo:
+    container_name: tempo
+    image: grafana/tempo:latest
+    ports:
+      - 3200:3200        # HTTP API 포트
+    volumes:
+      - ./tempo-data:/var/tempo
+      - ./docker/tempo-config.yml:/etc/tempo/tempo.yml
+    command: -config.file=/etc/tempo/tempo.yml
+    restart: always
+    networks:
+      - observability_network
+
+  collector:
+    container_name: collector
+    image: otel/opentelemetry-collector-contrib:0.91.0
+    command:
+      - --config=/etc/otelcol-contrib/otel-collector.yml
+    volumes:
+      - ./docker/otel-collector.yml:/etc/otelcol-contrib/otel-collector.yml
+    restart: always
+    ports:
+      - 4318:4317  # OTLP gRPC receiver
+      - 9464:9464  # 🚀 Prometheus Exporter 포트 추가 (Prometheus가 여기서 가져감)
+      - 13133:13133 # health_check extension
+    depends_on:
+      - loki
+      - tempo
+    networks:
+        - observability_network
