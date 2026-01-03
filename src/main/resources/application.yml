@@ -28,6 +28,19 @@ spring:
     schema-registry:
       url: http://127.0.0.1:8081
 
+# Feign Client 설정
+external:
+  api:
+    base-url: http://localhost:8080/mock/external
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 30000
+        loggerLevel: basic
+
   logging:
     level:
       org:

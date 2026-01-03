@@ -68,6 +68,9 @@ dependencies {
     implementation 'org.springframework:spring-aspects'
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 
+    /* Feign Client */
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     /* lombok */
